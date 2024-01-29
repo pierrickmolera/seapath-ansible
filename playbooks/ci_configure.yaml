@@ -1,0 +1,19 @@
+# Copyright (C) 2023, RTE (http://www.rte-france.com)
+# SPDX-License-Identifier: Apache-2.0
+
+# This playbook call all necessary playbooks to configure the CI and the SEAPATH
+# cluster
+---
+- import_playbook: ./ci_cleanup_syslog.yaml
+- import_playbook: ./ci_restore_snapshot.yaml
+- name: CI configure skip reboot
+  hosts:
+    - cluster_machines
+    - standalone_machine
+  tasks:
+  - name: CI configure skip setup_debian reboots
+    set_fact:
+      skip_reboot_setup_debian: true
+      skip_reboot_setup_network: true
+- import_playbook: ./cluster_setup_debian.yaml
+- import_playbook: ./cluster_setup_hardened_debian.yaml

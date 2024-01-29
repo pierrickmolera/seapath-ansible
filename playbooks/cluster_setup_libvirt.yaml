@@ -1,14 +1,12 @@
 # Copyright (C) 2022, RTE (http://www.rte-france.com)
 # SPDX-License-Identifier: Apache-2.0
 
-# This Ansible playbook configures libvirt to work with Ceph. It is
-# called by the playbook cluster_setup_main.yaml, but can also be
-# called independently.
+# This Ansible playbook configures libvirt to work with Ceph.
 
 ---
 - name: Configure libvirt rbd secret
   hosts: hypervisors
-
+  become: true
   pre_tasks:
       - name: Try to get already defined secret
         shell:
@@ -71,6 +69,7 @@
 
 - name: Create rbd pool
   hosts: hypervisors
+  become: true
   vars:
     rbd_pool_name: "{{ libvirt_rbd_pool | default('rbd') }}"
     pool_name: "{{ libvirt_pool_name | default('ceph') }}"
@@ -99,26 +98,3 @@
     - name: Refresh pool
       command: virsh pool-refresh --pool ceph
       changed_when: false
-
-- name: Update libvirtd configuration
-  hosts: hypervisors
-  tasks:
-    - name: Create libvirt group
-      group:
-          name: libvirt
-          state: present
-          system: yes
-    - name: Copy libvirtd.conf
-      template:
-          src: ../templates/libvirtd.conf.j2
-          dest: /etc/libvirt/libvirtd.conf
-          owner: root
-          group: root
-          mode: 0644
-      notify:
-          - restart libvirtd
-  handlers:
-    - name: restart libvirtd
-      service:
-          name: libvirtd
-          state: restarted

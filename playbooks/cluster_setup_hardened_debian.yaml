@@ -1,0 +1,33 @@
+# Copyright (C) 2022, RTE (http://www.rte-france.com)
+# SPDX-License-Identifier: Apache-2.0
+---
+
+- name: Add hardened in SEAPATH Debian machines
+  become: true
+  hosts:
+    - cluster_machines
+    - standalone_machine
+    - VMs
+  vars:
+    revert: false
+  roles:
+    - debian-hardening
+- name: Add hardened for SEAPATH physical machines
+  become: true
+  hosts:
+    - cluster_machines
+    - standalone_machine
+  vars:
+    revert: false
+  roles:
+    - debian-hardening/physical_machine
+
+- name: Reboot to apply hardening
+  become: true
+  hosts:
+    - cluster_machines
+    - standalone_machine
+    - VMs
+  tasks:
+    - name: Reboot
+      reboot:

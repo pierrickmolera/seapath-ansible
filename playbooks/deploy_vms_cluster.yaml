@@ -21,9 +21,8 @@
         command: create
         system_image: /tmp/os_{{ item }}.qcow2
         force: true
-        live_migration: "{{ livemigration | default(false) }}"
-        migration_user: "{{ livemigration_user | default('root') }}"
-        migrate_to_timeout: "{{ hostvars[item].migrate_to_timeout | default('') }}"
+        live_migration: true
+        migration_user: "{{ livemigration_user }}"
         enable: true
         pinned_host: "{{ hostvars[item].pinned_host | default(None) }}"
         preferred_host: "{{ hostvars[item].preferred_host | default(None) }}"
@@ -38,3 +37,10 @@
         path: "/tmp/os_{{ item }}.qcow2"
         state: absent
       with_items: "{{ groups['VMs'] }}"
+
+- hosts: VMs
+  name: Wait for VMs to be online
+  gather_facts: false
+  tasks:
+    - name: Wait for VM connections
+      wait_for_connection:

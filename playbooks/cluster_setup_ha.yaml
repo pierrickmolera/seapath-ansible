@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Ansible playbook that creates the cluster by configuring Corosync and
-# Pacemaker. It is called by the playbook cluster_setup_main.yaml, but it can
-# also be called independently.
+# Pacemaker.
 
 ---
 - name: Configure SEAPATH specific files
   hosts: cluster_machines
+  become: true
   tasks:
   - name: Save cluster machine informations
     template:
@@ -16,6 +16,7 @@
 
 - name: Check if corosync is already setup
   hosts: cluster_machines
+  become: true
   tasks:
     - name: check corosync service status
       systemd:
@@ -42,6 +43,7 @@
 
 - name: Setup Corosync from scratch
   hosts: cluster_machines
+  become: true
   vars_files:
       - ../vars/corosync_vars.yaml
   roles:
@@ -50,6 +52,7 @@
 
 - name: Fetch existing corosync using configuration
   hosts: valid_machine
+  become: true
   vars:
     tmpdir: "/tmp"
   tasks:
@@ -70,6 +73,7 @@
 
 - name: Setup Corosync using existing configuration
   hosts: unconfigured_machine_group
+  become: true
   vars:
     tmpdir: "/tmp"
   tasks:
@@ -97,6 +101,7 @@
 
 - name: Setup Pacemaker
   hosts: unconfigured_machine_group
+  become: true
   tasks:
       - name: Start Pacemaker
         ansible.builtin.systemd:
@@ -115,7 +120,7 @@
         when: groups['valid_machine'] is undefined
 
 - name: run extra CRM commands
-  hosts: all
+  hosts: cluster_machines
   become: true
   tasks:
       - name: run extra CRM configuration commands
@@ -125,3 +130,17 @@
         no_log: true
         failed_when: 0 == 1
         loop: "{{ extra_crm_cmd_to_run }}"
+      - name: run extra CRM configuration commands for vm-mgr http api
+        command: "/usr/sbin/crm configure {{ item }}"
+        when:
+          - enable_vmmgr_http_api is defined
+          - enable_vmmgr_http_api is true
+          - admin_cluster_ip is defined
+        run_once: true
+        no_log: true
+        failed_when: 0 == 1
+        loop:
+          - "primitive ClusterIP IPaddr2 params ip={{ admin_cluster_ip }} cidr_netmask=32 op monitor interval=30s meta target-role=Started"
+          - "primitive vmmgrapi systemd:nginx.service  op monitor interval=30s"
+          - "colocation vmmgrapi_colocation inf: ClusterIP vmmgrapi"
+
