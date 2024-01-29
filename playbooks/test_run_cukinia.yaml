@@ -1,0 +1,56 @@
+# Copyright (C) 2022, RTE (http://www.rte-france.com)
+# SPDX-License-Identifier: Apache-2.0
+
+# Ansible playbook that runs Cukinia functional tests and export the result in
+# CSV.
+
+---
+- hosts:
+    - cluster_machines
+    - standalone_machine
+    - VMs
+  name: Cukinia tests
+  become: true
+  vars:
+    tests_format: junitxml
+    tests_result_name: "cukinia_{{ inventory_hostname }}.xml"
+    cukinia_test_prefix: ".."
+  tasks:
+    - name: Create temporary Cukinia directory
+      tempfile:
+        state: directory
+      register: tmp_cukinia_dir
+    - name: Run tests
+      shell:
+        cmd: >-
+          MACHINENAME={{ cukinia_namespace | default(inventory_hostname) }}
+          cukinia -f {{ tests_format }}
+          -o {{ tmp_cukinia_dir.path }}/{{ tests_result_name }} || true
+    - name: Fetch result
+      fetch:
+        src: "{{ tmp_cukinia_dir.path }}/{{ tests_result_name }}"
+        dest: "{{ cukinia_test_prefix }}/{{ tests_result_name }}"
+        flat: yes
+
+- hosts:
+    - cluster_machines
+  name: Cukinia tests
+  become: true
+  vars:
+    tests_format: junitxml
+    cluster_tests_result_name: "cukinia_cluster_{{ inventory_hostname }}.xml"
+    cukinia_test_prefix: ".."
+  tasks:
+    - name: Run tests cluster test
+      shell:
+        cmd: >-
+          cukinia -f {{ tests_format }}
+          -o {{ tmp_cukinia_dir.path }}/{{ cluster_tests_result_name }}
+          /etc/cukinia/cukinia-cluster.conf || true
+      run_once: true
+    - name: Fetch cluster test result
+      fetch:
+        src: "{{ tmp_cukinia_dir.path }}/{{ cluster_tests_result_name }}"
+        dest: "{{ cukinia_test_prefix }}/{{ cluster_tests_result_name }}"
+        flat: yes
+      run_once: true
