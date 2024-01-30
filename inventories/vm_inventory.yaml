@@ -18,3 +18,5 @@ all:
       vars:
         ansible_user: virtu
         apply_network_config: true
+        cluster_ip_addr: "192.168.55.4"
+        network_interface: ens2
