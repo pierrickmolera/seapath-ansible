@@ -14,9 +14,9 @@ playbooks/*
 !playbooks/tasks/
 !playbooks/standalone*
 !playbooks/deploy_*.yaml
-inventories/*
-!inventories/README.adoc
-!inventories/*example*
+#inventories/*
+#!inventories/README.adoc
+#!inventories/*example*
 
 # Ide
 .idea/
