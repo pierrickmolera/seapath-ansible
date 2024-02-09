@@ -42,7 +42,7 @@ inventories_private/
 /*.xml
 
 # VM folder
-vm_images/*.qcow2
+#vm_images/*.qcow2
 
 # Src from privates repos
 src/trafgen/*
