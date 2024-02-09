@@ -22,21 +22,6 @@ all:
               ptp_vlanid: 503 #OPTIONAL VlanID for PTP
               ptp_delay_mechanism: P2P # OPTIONAL E2E or P2P defaut is P2P
               ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
-              custom_netdev:
-                00-vlan100:
-                - NetDev:
-                  - Name: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
-                  - Kind: "vlan"
-                - VLAN:
-                  - Id: "{{ ptp_vlanid }}"
-              custom_network:
-                01-physicalptpinterface:
-                - Match:
-                  - Name: "{{ ptp_interface }}"
-                  - Type: "ether"
-                - Network:
-                  - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
-                  - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
 
               # Cluster network settings
               team0_0: "enxa0cec88bc189" # cluster network first interface
@@ -49,18 +34,21 @@ all:
               brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
               ovs_vsctl_cmds: # Extra ovs-vsctl commands to be run by the network playbook
               - "set Bridge brBRIDGE1 netflow=@nf0 -- --id=@nf0 create NetFlow targets=\\\"192.168.10.1:2055\\\" add_id_to_interface=true"
-              # custom_network:
-            # - 01-enp24s0_sriov:
-            #   - Match:
-            #     - Name: "enp24s0*"
-            #   - SR-IOV:
-            #     - VirtualFunction: 0
-            #     - Trust: 1
-            #     - LinkState: on
-            #   - SR-IOV:
-            #     - VirtualFunction: 1
-            #     - Trust: 1
-            #     - LinkState: on
+            custom_netdev:
+              00-vlan100:
+              - NetDev:
+                - Name: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                - Kind: "vlan"
+              - VLAN:
+                - Id: "{{ ptp_vlanid }}"
+            custom_network:
+              01-physicalptpinterface:
+              - Match:
+                - Name: "{{ ptp_interface }}"
+                - Type: "ether"
+              - Network:
+                - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
 
             node2:
               # ansbile variables
@@ -79,6 +67,16 @@ all:
               ptp_vlanid: 503 #OPTIONAL VlanID for PTP
               ptp_delay_mechanism: P2P # OPTIONAL E2E or P2P defaut is P2P
               ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
+
+              # Cluster network settings
+              team0_0: "enxa0cec88ba75b"
+              team0_1: "enxa0cec88bbe14"
+              #hsr_mac_address: "70:FF:76:1C:0E:8D" # if using HSR for cluster network, you need to specify the mac address for each host
+              cluster_next_ip_addr: "192.168.55.3" #node 3 cluster network ip
+              cluster_previous_ip_addr: "192.168.55.1" #node 1 cluster network ip
+              cluster_ip_addr: "192.168.55.2"
+              br_rstp_priority: 16384
+              brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
               custom_netdev:
                 00-vlan100:
                 - NetDev:
@@ -94,16 +92,6 @@ all:
                 - Network:
                   - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
                   - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
-
-              # Cluster network settings
-              team0_0: "enxa0cec88ba75b"
-              team0_1: "enxa0cec88bbe14"
-              #hsr_mac_address: "70:FF:76:1C:0E:8D" # if using HSR for cluster network, you need to specify the mac address for each host
-              cluster_next_ip_addr: "192.168.55.3" #node 3 cluster network ip
-              cluster_previous_ip_addr: "192.168.55.1" #node 1 cluster network ip
-              cluster_ip_addr: "192.168.55.2"
-              br_rstp_priority: 16384
-              brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
 
             node3:
               # ansbile variables
@@ -122,6 +110,16 @@ all:
               ptp_vlanid: 503 #OPTIONAL VlanID for PTP
               ptp_delay_mechanism: P2P # OPTIONAL E2E or P2P defaut is P2P
               ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
+
+              # Cluster network settings
+              team0_0: "enxa0cec88ba8c9"
+              team0_1: "enxa0cec8b42dd3"
+              #hsr_mac_address: "70:FF:76:1C:0E:8E" # if using HSR for cluster network, you need to specify the mac address for each host
+              cluster_next_ip_addr: "192.168.55.1" #ip de hyperviseur 1
+              cluster_previous_ip_addr: "192.168.55.2" #ip de l'hyperviseur 2
+              cluster_ip_addr: "192.168.55.3"
+              br_rstp_priority: 16384
+              brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
               custom_netdev:
                 00-vlan100:
                 - NetDev:
@@ -138,16 +136,6 @@ all:
                   - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
                   - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
 
-              # Cluster network settings
-              team0_0: "enxa0cec88ba8c9"
-              team0_1: "enxa0cec8b42dd3"
-              #hsr_mac_address: "70:FF:76:1C:0E:8E" # if using HSR for cluster network, you need to specify the mac address for each host
-              cluster_next_ip_addr: "192.168.55.1" #ip de hyperviseur 1
-              cluster_previous_ip_addr: "192.168.55.2" #ip de l'hyperviseur 2
-              cluster_ip_addr: "192.168.55.3"
-              br_rstp_priority: 16384
-              brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
-
 
           # hypervisors common vars
           vars:
@@ -160,3 +148,7 @@ all:
             cpumachinesrt: "2-7" # CPUs reserves for VMs realtime
             cpumachinesnort: "2-7" # CPUs reserves for VMs non realtime
             cpuovs: "2-7" # CPUs reserves for OVS
+
+
+
+
