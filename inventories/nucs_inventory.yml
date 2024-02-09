@@ -306,14 +306,13 @@ all:
       - http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
       - http://ftp.fr.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
       - https://artifacts.elastic.co/packages/8.x/apt stable main
-
       # Default user with admin privileges, and password hash
       # Default user with admin privileges, and password hash
-        admin_user: virtu
-        admin_passwd: "$y$j9T$s.szNr.QzTLk8h5qMYDpo0$YMaC8.04FilI/1AguyofvbV4FH1me6Nc7SHP4hyefZ2" # /etc/shadow
-        # SSH public keys for the admin_user
-        admin_ssh_keys: # ~/.ssh/authorized_keys
-          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhP63edrtOvAJ5Tj8guifTxWuo26oddcJ3m7ZOXzN/xSg2mgN4pwrRMArhHlpggzfvrqoUgb3PbN2DLWtbgAJ25mCQ2c1yvn/jLKZi7l6+eNj8C6sRJpl+TmX6IVX7lWhUFGzKr2ALmCuoeKjddWq4BlljjeFqjNIP1Np/MGKSgIwUX6XZWCrBpRHsGMyMSkGnEhjM5b2Ak7GWPVDOkPc5oxQ14ij7i6d1ciLvOPesRQrCDyC6QhFFxzzM8UXsS9yz2MbA5xR86bC5MoZC6VSY439m5feowjGTJRdsFXLnCPSBipb5vYuoE+SxJ1hY/y1f/iAQphfQZuHK9j6Rd2Sfs2VZxS09rB44dHqzfekqPR+Dv8JPkFf2ZOf3tnGMA+CEtnC7CVzgBgkg5JEdg6PBoWZCaYD61VMqWrwjpsjGhaNx53G0A37NJH1RX/Vz+2ADIdZUlLpiDD2rM6c2pa34lVzQBSkZDECsTrGfNpmPwQ26f8en26viHncQhot2k1U= pierrick.molera@gmail.com"
+      admin_user: virtu
+      admin_passwd: "$y$j9T$s.szNr.QzTLk8h5qMYDpo0$YMaC8.04FilI/1AguyofvbV4FH1me6Nc7SHP4hyefZ2" # /etc/shadow
+      # SSH public keys for the admin_user
+      admin_ssh_keys: # ~/.ssh/authorized_keys
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhP63edrtOvAJ5Tj8guifTxWuo26oddcJ3m7ZOXzN/xSg2mgN4pwrRMArhHlpggzfvrqoUgb3PbN2DLWtbgAJ25mCQ2c1yvn/jLKZi7l6+eNj8C6sRJpl+TmX6IVX7lWhUFGzKr2ALmCuoeKjddWq4BlljjeFqjNIP1Np/MGKSgIwUX6XZWCrBpRHsGMyMSkGnEhjM5b2Ak7GWPVDOkPc5oxQ14ij7i6d1ciLvOPesRQrCDyC6QhFFxzzM8UXsS9yz2MbA5xR86bC5MoZC6VSY439m5feowjGTJRdsFXLnCPSBipb5vYuoE+SxJ1hY/y1f/iAQphfQZuHK9j6Rd2Sfs2VZxS09rB44dHqzfekqPR+Dv8JPkFf2ZOf3tnGMA+CEtnC7CVzgBgkg5JEdg6PBoWZCaYD61VMqWrwjpsjGhaNx53G0A37NJH1RX/Vz+2ADIdZUlLpiDD2rM6c2pa34lVzQBSkZDECsTrGfNpmPwQ26f8en26viHncQhot2k1U= pierrick.molera@gmail.com"
       # account used for libvirt live-migration
       livemigration_user: livemigration
 
