@@ -15,12 +15,12 @@ all:
               #br0vlan: 159 #if the main interface on br0 is on a vlan that the host must manage
 
               # Admin network settings
-              admin_ip_addr: 192.168.0.200 #used for snmp
+              #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
 
               # PTP network settings
               ptp_interface: "enp88s0" #OPTIONAL PTP Interface
               ptp_vlanid: 503 #OPTIONAL VlanID for PTP
-              ptp_delay_mechanism: P2P # OPTIONAL E2E or P2P defaut is P2P
+              ptp_delay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
               ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
 
               # Cluster network settings
@@ -60,12 +60,12 @@ all:
               subnet: 25
 
               # Admin network settings
-              admin_ip_addr: 192.168.0.200 #used for snmp
+              #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
 
               # PTP network settings
               ptp_interface: "enp88s0" #OPTIONAL PTP Interface
               ptp_vlanid: 503 #OPTIONAL VlanID for PTP
-              ptp_delay_mechanism: P2P # OPTIONAL E2E or P2P defaut is P2P
+              ptp_delay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
               ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
 
               # Cluster network settings
@@ -103,12 +103,12 @@ all:
               subnet: 25
 
               # Admin network settings
-              admin_ip_addr: 192.168.0.200 #used for snmp
+              #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
 
               # PTP network settings
               ptp_interface: "enp88s0" #OPTIONAL PTP Interface
               ptp_vlanid: 503 #OPTIONAL VlanID for PTP
-              ptp_delay_mechanism: P2P # OPTIONAL E2E or P2P defaut is P2P
+              ptp_delay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
               ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
 
               # Cluster network settings
