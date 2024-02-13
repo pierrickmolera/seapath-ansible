@@ -173,7 +173,7 @@ all:
         #  data_vg: vg1 # Name of the volume group to use for the CEPH OSD volume
         #  data_size: 10G # Size of the logical volume, default in megabytes, possible values: [0-9]+[bBsSkKmMgGtTpPeE]
         #  device: "{{ ceph_osd_disk }}"
-        device:
+        devices:
         - "{{ ceph_osd_disk }}"
     # Machines that will be used as clients (which will use Ceph)
     # All machines in the cluster must be part of clients groups
