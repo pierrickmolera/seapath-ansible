@@ -168,11 +168,11 @@ all:
         # ceph_osd_disk needs to be set to the "/dev/disk/by-path/" link of the disk used by the osd
         ceph_osd_disk: "/dev/disk/by-path/pci-0000:00:17.0-ata-2"
         # Required variables by ceph-ansible:
-    #lvm_volumes: # Optional
-    #- data: lv_ceph # Name of the logical volume to use for the CEPH OSD volume
-    #  data_vg: vg1 # Name of the volume group to use for the CEPH OSD volume
-    #  data_size: 10G # Size of the logical volume, default in megabytes, possible values: [0-9]+[bBsSkKmMgGtTpPeE]
-    #  device: "{{ ceph_osd_disk }}"
+        #lvm_volumes: # Optional
+        #- data: lv_ceph # Name of the logical volume to use for the CEPH OSD volume
+        #  data_vg: vg1 # Name of the volume group to use for the CEPH OSD volume
+        #  data_size: 10G # Size of the logical volume, default in megabytes, possible values: [0-9]+[bBsSkKmMgGtTpPeE]
+        device: "{{ ceph_osd_disk }}"
     # Machines that will be used as clients (which will use Ceph)
     # All machines in the cluster must be part of clients groups
     # You can also add some administation machines in this group
