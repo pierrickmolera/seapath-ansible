@@ -24,6 +24,7 @@ all:
         ansible_user: ansible
         apply_network_config: true
         network_interface: ens2
+        ip_addr: "{{ ansible_host }}"
 
 # all:
 #   children:
