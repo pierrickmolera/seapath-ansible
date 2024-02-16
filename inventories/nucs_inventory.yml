@@ -14,7 +14,7 @@ all:
               subnet: 25 #default is 24, override if necessary
               #br0vlan: 159 #if the main interface on br0 is on a vlan that the host must manage
 
-              # Admin network settings
+              # SNMP network settings
               #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
 
               # PTP network settings
