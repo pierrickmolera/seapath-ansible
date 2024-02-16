@@ -31,7 +31,7 @@ all:
               cluster_previous_ip_addr: "192.168.55.3" #node 3 cluster network ip
               cluster_ip_addr: "192.168.55.1"
               br_rstp_priority: 12288
-              #brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
+              brBRIDGE1_ext: enp88s0 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
               #ovs_vsctl_cmds: # Extra ovs-vsctl commands to be run by the network playbook
               #- "set Bridge brBRIDGE1 netflow=@nf0 -- --id=@nf0 create NetFlow targets=\\\"192.168.10.1:2055\\\" add_id_to_interface=true"
               custom_netdev:
@@ -76,7 +76,7 @@ all:
               cluster_previous_ip_addr: "192.168.55.1" #node 1 cluster network ip
               cluster_ip_addr: "192.168.55.2"
               br_rstp_priority: 16384
-              brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
+              brBRIDGE1_ext: enp88s0 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
               custom_netdev:
                 00-vlan100:
                 - NetDev:
@@ -119,7 +119,7 @@ all:
               cluster_previous_ip_addr: "192.168.55.2" #ip de l'hyperviseur 2
               cluster_ip_addr: "192.168.55.3"
               br_rstp_priority: 16384
-              brBRIDGE1_ext: eno1234 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
+              brBRIDGE1_ext: enp88s0 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
               custom_netdev:
                 00-vlan100:
                 - NetDev:

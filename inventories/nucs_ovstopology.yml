@@ -37,3 +37,8 @@ all:
               - name: VM4.0 # a access port (vlan 11) for VM4
                 type: tap
                 tag: 11
+              - name: brBRIDGE1_ext
+                # a link to the physical interface for the host
+                type: system
+                # this refers to the node inventory
+                interface: "{{ brBRIDGE1_ext }}"
