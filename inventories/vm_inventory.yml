@@ -10,7 +10,7 @@ all:
           description: "Simple VM"
           ansible_host: 192.168.8.50 #te the VM IP
           vm_template: "../templates/vm/guest.xml.j2"
-          vm_disk: "../vm_images/guest.qcow2"
+          vm_disk: "../vm_images/seapath-vm0.qcow2"
           nb_cpu: 2
           #cpuset: [2, 3] not necessary because 
           vm_features: []
@@ -26,7 +26,7 @@ all:
           description: "VM RT"
           ansible_host: 192.168.8.51
           vm_template: "../templates/vm/guest.xml.j2"
-          vm_disk: "../vm_images/guest.qcow2"
+          vm_disk: "../vm_images/seapath-vm1.qcow2"
           cpuset: [4, 5] # CPUs list to use.
           rt_priority: 1 # FIFO priority
           vm_features: ["rt", "isolated"]
