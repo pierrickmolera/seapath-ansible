@@ -140,14 +140,14 @@ all:
           # hypervisors common vars
           vars:
             # Realtime/CPUs cgroups isolation configuration
-            isolcpus: "2-7" # CPUs to isolate (isolcpus, irqbalance on debian 12) isoler les cpus 1 et 2 pour la partie administration
-            workqueuemask: "1001" #workqueue mask, here it mean 0 and 12 are the only allowed cpus
-            cpusystem: "0,1" # CPUs reserves for system
-            cpuuser: "2-7" # CPUs reserves for user applications
+            isolcpus: "2-7" # CPUs to isolate (isolcpus, irqbalance on debian 12)
+            workqueuemask: "0003" #workqueue mask, here it mean 0 and 1 are the only allowed cpus
+            cpusystem: "0-1" # CPUs reserves for system
+            cpuuser: "0-1" # CPUs reserves for user applications
             cpumachines: "2-7" # CPUs reserves for VMs
-            cpumachinesrt: "2-7" # CPUs reserves for VMs realtime
-            cpumachinesnort: "2-7" # CPUs reserves for VMs non realtime
-            cpuovs: "2-7" # CPUs reserves for OVS
+            cpumachinesrt: "4-7" # CPUs reserves for VMs realtime
+            cpumachinesnort: "2-3" # CPUs reserves for VMs non realtime
+            cpuovs: "0-1" # CPUs reserves for OVS
 
 
     # Ceph groups
@@ -273,15 +273,11 @@ all:
     livemigration_user: livemigration
 
     #pacemaker_shutdown_timeout: "2min"
-    extra_crm_cmd_to_run:
-    # for ntp status monitoting, be sure host_ip is the ip address of the server and not its hostname
-    - primitive ntpstatus_test ocf:seapath:ntpstatus params host_ip=185.254.101.25 multiplier=500 op monitor timeout=10 interval=10
-    #- primitive ptpstatus_test ocf:seapath:ptpstatus op monitor timeout=10 interval=10 op_params multiplier=1000
-    - clone cl_ntpstatus_test ntpstatus_test meta target-role=Started
-    #- clone cl_ptpstatus_test ptpstatus_test meta target-role=Started
+    extra_crm_cmd_to_run: |
+      # for ntp status monitoting, be sure host_ip is the ip address of the server and not its hostname
+      primitive ntpstatus_test ocf:seapath:ntpstatus params host_ip=10.10.10.10 multiplier=500 op monitor timeout=10 interval=10
+      primitive ptpstatus_test ocf:seapath:ptpstatus op monitor timeout=10 interval=10 op_params multiplier=1000
+      clone cl_ntpstatus_test ntpstatus_test meta target-role=Started
+      clone cl_ptpstatus_test ptpstatus_test meta target-role=Started
 
     chrony_wait_timeout_sec: 180 #time in seconds the boot sequence will wait for chrony to sync
-
-
-
-

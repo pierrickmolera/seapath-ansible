@@ -7,12 +7,11 @@ all:
     VMs:
       hosts:
         guest0:
-          description: "Simple VM"
-          ansible_host: 192.168.8.50 #te the VM IP
+          description: "Simple VM 3"
+          ansible_host: 192.168.8.50
           vm_template: "../templates/vm/guest.xml.j2"
           vm_disk: "../vm_images/seapath-vm0.qcow2"
           nb_cpu: 2
-          #cpuset: [2, 3] not necessary because 
           vm_features: []
           preferred_host: node1 # Optional
           bridges:
@@ -21,23 +20,20 @@ all:
           ovs:
           - ovs_port: VM1.0 # Change the OVS port
             mac_address: "52:54:00:c4:ff:05" # change the MAC address
-
         guest1:
-          description: "VM RT"
+          description: "VM RT 3"
           ansible_host: 192.168.8.51
           vm_template: "../templates/vm/guest.xml.j2"
           vm_disk: "../vm_images/seapath-vm1.qcow2"
-          cpuset: [4, 5] # CPUs list to use.
+          cpuset: [5, 6] # CPUs list to use.
           rt_priority: 1 # FIFO priority
           vm_features: ["rt", "isolated"]
-          preferred_host: node2 # Optional
           bridges:
           - name: "br0" # Change the bridge name
             mac_address: "52:54:00:c4:ff:03" # change the MAC address
           ovs:
-          - ovs_port: VM2.0 # Change the OVS port
+          - ovs_port: VM1.0 # Change the OVS port
             mac_address: "52:54:00:c4:ff:06" # change the MAC address
-
       vars:
         ansible_user: ansible
         apply_network_config: true
