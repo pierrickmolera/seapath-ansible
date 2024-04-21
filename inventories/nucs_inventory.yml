@@ -1,0 +1,283 @@
+all:
+  children:
+    cluster_machines:
+      children:
+        hypervisors:
+          hosts:
+            node1:
+              # ansible variables
+              ansible_host: 192.168.8.31
+
+              # Main network interface configuration
+              network_interface: enxa0cec88b0b36 #main interface
+              ip_addr: "{{ ansible_host }}"
+              subnet: 25 #default is 24, override if necessary
+              #br0vlan: 159 #if the main interface on br0 is on a vlan that the host must manage
+
+              # SNMP network settings
+              #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
+
+              # PTP network settings
+              ptp_interface: "enp88s0" #OPTIONAL PTP Interface
+              ptp_vlanid: 503 #OPTIONAL VlanID for PTP
+              ptp_delay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
+              ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
+
+              # Cluster network settings
+              team0_0: "enxa0cec88bc189" # cluster network first interface
+              team0_1: "enxa0cec8875260" # cluster network second interface
+              #hsr_mac_address: "70:FF:76:1C:0E:8C" # if using HSR for cluster network, you need to specify the mac address for each host
+              cluster_next_ip_addr: "192.168.55.2" #node 2 cluster network ip
+              cluster_previous_ip_addr: "192.168.55.3" #node 3 cluster network ip
+              cluster_ip_addr: "192.168.55.1"
+              br_rstp_priority: 12288
+              brBRIDGE1_ext: enp88s0 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
+              #ovs_vsctl_cmds: # Extra ovs-vsctl commands to be run by the network playbook
+              #- "set Bridge brBRIDGE1 netflow=@nf0 -- --id=@nf0 create NetFlow targets=\\\"192.168.10.1:2055\\\" add_id_to_interface=true"
+              custom_netdev:
+                00-vlan100:
+                - NetDev:
+                  - Name: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                  - Kind: "vlan"
+                - VLAN:
+                  - Id: "{{ ptp_vlanid }}"
+              custom_network:
+                01-physicalptpinterface:
+                - Match:
+                  - Name: "{{ ptp_interface }}"
+                  - Type: "ether"
+                - Network:
+                  - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                  - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
+
+            node2:
+              # ansbile variables
+              ansible_host: 192.168.8.32
+
+              # Main network interface configuration
+              network_interface: enxa0cec88bc388
+              ip_addr: "{{ ansible_host }}"
+              subnet: 25
+
+              # Admin network settings
+              #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
+
+              # PTP network settings
+              ptp_interface: "enp88s0" #OPTIONAL PTP Interface
+              ptp_vlanid: 503 #OPTIONAL VlanID for PTP
+              ptp_delay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
+              ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
+
+              # Cluster network settings
+              team0_0: "enxa0cec88ba75b"
+              team0_1: "enxa0cec88bbe14"
+              #hsr_mac_address: "70:FF:76:1C:0E:8D" # if using HSR for cluster network, you need to specify the mac address for each host
+              cluster_next_ip_addr: "192.168.55.3" #node 3 cluster network ip
+              cluster_previous_ip_addr: "192.168.55.1" #node 1 cluster network ip
+              cluster_ip_addr: "192.168.55.2"
+              br_rstp_priority: 16384
+              brBRIDGE1_ext: enp88s0 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
+              custom_netdev:
+                00-vlan100:
+                - NetDev:
+                  - Name: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                  - Kind: "vlan"
+                - VLAN:
+                  - Id: "{{ ptp_vlanid }}"
+              custom_network:
+                01-physicalptpinterface:
+                - Match:
+                  - Name: "{{ ptp_interface }}"
+                  - Type: "ether"
+                - Network:
+                  - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                  - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
+
+            node3:
+              # ansbile variables
+              ansible_host: 192.168.8.33
+
+              # Main network interface configuration
+              network_interface: enxa0cec88bbc7f
+              ip_addr: "{{ ansible_host }}"
+              subnet: 25
+
+              # Admin network settings
+              #snmp_admin_ip_addr: 192.168.0.200 #used for snmp
+
+              # PTP network settings
+              ptp_interface: "enp88s0" #OPTIONAL PTP Interface
+              ptp_vlanid: 503 #OPTIONAL VlanID for PTP
+              ptp_delay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
+              ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
+
+              # Cluster network settings
+              team0_0: "enxa0cec88ba8c9"
+              team0_1: "enxa0cec8b42dd3"
+              #hsr_mac_address: "70:FF:76:1C:0E:8E" # if using HSR for cluster network, you need to specify the mac address for each host
+              cluster_next_ip_addr: "192.168.55.1" #ip de hyperviseur 1
+              cluster_previous_ip_addr: "192.168.55.2" #ip de l'hyperviseur 2
+              cluster_ip_addr: "192.168.55.3"
+              br_rstp_priority: 16384
+              brBRIDGE1_ext: enp88s0 #physical nic to use with BRIDGE1 (see the ovs topology inventory)
+              custom_netdev:
+                00-vlan100:
+                - NetDev:
+                  - Name: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                  - Kind: "vlan"
+                - VLAN:
+                  - Id: "{{ ptp_vlanid }}"
+              custom_network:
+                01-physicalptpinterface:
+                - Match:
+                  - Name: "{{ ptp_interface }}"
+                  - Type: "ether"
+                - Network:
+                  - VLAN: "{{ ptp_interface + '.' + ptp_vlanid|string }}"
+                  - Description: "ptp interface {{ ptp_interface }} vlan {{ ptp_vlanid }}"
+
+
+          # hypervisors common vars
+          vars:
+            # Realtime/CPUs cgroups isolation configuration
+            isolcpus: "2-7" # CPUs to isolate (isolcpus, irqbalance on debian 12)
+            workqueuemask: "0033" #workqueue mask, here it mean 0 and 1 are the only allowed cpus
+            #cpusystem: "0-1" # CPUs reserves for system
+            #cpuuser: "0-1" # CPUs reserves for user applications
+            #cpumachines: "2-7" # CPUs reserves for VMs
+            #cpumachinesrt: "4-7" # CPUs reserves for VMs realtime
+            #cpumachinesnort: "2-3" # CPUs reserves for VMs non realtime
+            #cpuovs: "0-1" # CPUs reserves for OVS
+
+
+    # Ceph groups
+    # All machines in the cluster must be part of mons groups
+    mons:
+      hosts:
+        node1:
+        node2:
+        node3:
+    # Machines that will be used as OSDs (which will store data)
+    osds:
+      hosts:
+        node1:
+        node2:
+        node3:
+      vars:
+        # Ceph settings
+        # ceph_osd_disk needs to be set to the "/dev/disk/by-path/" link of the disk used by the osd
+        ceph_osd_disk: "/dev/disk/by-path/pci-0000:00:17.0-ata-2"
+        # Required variables by ceph-ansible:
+        #lvm_volumes: # Optional
+        #- data: lv_ceph # Name of the logical volume to use for the CEPH OSD volume
+        #  data_vg: vg1 # Name of the volume group to use for the CEPH OSD volume
+        #  data_size: 10G # Size of the logical volume, default in megabytes, possible values: [0-9]+[bBsSkKmMgGtTpPeE]
+        #  device: "{{ ceph_osd_disk }}"
+        devices:
+        - "{{ ceph_osd_disk }}"
+    # Machines that will be used as clients (which will use Ceph)
+    # All machines in the cluster must be part of clients groups
+    # You can also add some administation machines in this group
+    clients:
+      hosts:
+        node1:
+        node2:
+        node3:
+      vars:
+        # Required variables by ceph-ansible.
+        # These are SEAPATH needed overrides. Do not change unless you know exactly what you are doing
+        user_config: true
+        rbd:
+          name: "rbd"
+          application: "rbd"
+          pg_autoscale_mode: on
+          target_size_ratio: 1
+        pools:
+        - "{{ rbd }}"
+        keys:
+        - name: client.libvirt
+          caps:
+            mon: 'profile rbd, allow command "osd blacklist"'
+            osd: "allow class-read object_prefix rbd_children, profile rbd pool=rbd"
+          mode: "{{ ceph_keyring_permissions }}"
+  vars:
+    # Ansible vars
+    ansible_connection: ssh
+    ansible_user: ansible
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    ansible_remote_tmp: /tmp/.ansible/tmp
+
+    # Main network configuration
+    gateway_addr: 192.168.8.1
+    dns_servers: "8.8.8.8 8.8.4.4"
+    apply_network_config: false # do we restart the ovs_config script to apply the changes to the ovs topology (default: false)
+    skip_reboot_setup_network: false # if we do no apply the changes (apply_network_config=false), then the network playbook will reboot the servers at the end. You can choose to skip this reboot here (default: false)
+    skip_recreate_team0_config: false # if defined and true, the network playbook won't try to destroy and recreate the team0 (cluster) bridge configuration (default is false)
+    remove_all_networkd_config: true # if defined and true, the network playbook will start by wiping the /etc/systemd/network/ directory content, this can help cleaning old conflicting files. THIS MUST NOT BE USED WITH skip_recreate_team0_config at the same time or the cluster network config won't be recreated
+
+    ntp_servers:
+    - "185.254.101.25"
+    - "51.145.123.29"
+
+    # Ceph settings
+    # Required variables by ceph-ansible.
+    # These are SEAPATH needed overrides. Do not change unless specified (osd_pool_default*) or you know exactly what you are doing
+    configure_firewall: false
+    ntp_service_enabled: false
+    ceph_origin: distro
+    monitor_address: "{{ cluster_ip_addr }}"
+    public_network: "192.168.55.0/24"
+    cluster_network: "{{ public_network }}"
+    ceph_conf_overrides:
+      global:
+        osd_pool_default_size: 3 # to be set to the number storage nodes
+        osd_pool_default_min_size: 2 # to be set to the number of nodes - the number of nodes we are allowing ourselve to lose = the minimum number of nodes needed online for the pool to be available
+        osd_pool_default_pg_num: 128
+        osd_pool_default_pgp_num: 128
+        osd_crush_chooseleaf_type: 1
+        mon_osd_min_down_reporters: 1
+      mon:
+        auth_allow_insecure_global_id_reclaim: false
+      osd:
+        osd_min_pg_log_entries: 500
+        osd_max_pg_log_entries: 500
+        osd memory target: 8076326604
+    dashboard_enabled: false
+
+    # Grub password
+    # The password hash generated with "grub-mkpasswd-pbkdf2 -c 65536 -s 256 -l 64", in this example the pass is "toto"
+    grub_password: grub.pbkdf2.sha512.65536.E291D66AEEB3C22BD6B019C5C3587A3094AE93D61E20D134EC6324925AE5045DCA61EF30B3BD04B4D6F7360B9C9B242AA68B1643CCB269C53658EC959B5964ADB9C9D5FAA280A291D8F95E3F255254A4119A2431AFE797F1949EE4FBBC4C74281C550C83DAED26C254224061BEFCEEBF8091A8D1BE406EBB3A3E8A519E36B4FE161BE191D407193E5DFEBCC09F8822B4060EA9CD1E6B8677D40D32826EF025CA494BCD209032F7CF2A4A2E74717E6D17E87A62AAA93E458C96F983E69FBFC4FD602403988EAF5AADCA4B5B145B0F6C6FFB53F55CD6C56C15C17B2F8A5B3A214F3140470566597760D9388084AE978DB5C0EBF7C868A855DB38DACA47A010417A.FDA0C3188FAC87FFA04D862AC9B1020F29FEEA3B9590BE534330D8C7CAB71444CBF527E39D7DAE640545139202B9CA77822CCE21AB1134110F6AF3EFD793E848
+
+    # Grub option: this will be added to the grub cmdline -- port serie
+    #grub_append: "console=ttyS0,115200"
+
+    # Extra kernel modules to be loaded at boot (you may need this depending on your hardware)
+    extra_kernel_modules: []
+
+    # Optional list variable to change apt repositories. All repositories will be overrides.
+    # If defined as empty list [], all apt repositories will be removed
+    apt_repo:
+    - http://ftp.fr.debian.org/debian bookworm main contrib non-free non-free-firmware
+    - http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+    - http://ftp.fr.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+    - https://artifacts.elastic.co/packages/8.x/apt stable main
+
+    # Default user with admin privileges, and password hash
+    admin_user: virtu
+    admin_passwd: "$y$j9T$s.szNr.QzTLk8h5qMYDpo0$YMaC8.04FilI/1AguyofvbV4FH1me6Nc7SHP4hyefZ2" # /etc/shadow
+    # SSH public keys for the admin_user
+    admin_ssh_keys: # ~/.ssh/authorized_keys
+    - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhP63edrtOvAJ5Tj8guifTxWuo26oddcJ3m7ZOXzN/xSg2mgN4pwrRMArhHlpggzfvrqoUgb3PbN2DLWtbgAJ25mCQ2c1yvn/jLKZi7l6+eNj8C6sRJpl+TmX6IVX7lWhUFGzKr2ALmCuoeKjddWq4BlljjeFqjNIP1Np/MGKSgIwUX6XZWCrBpRHsGMyMSkGnEhjM5b2Ak7GWPVDOkPc5oxQ14ij7i6d1ciLvOPesRQrCDyC6QhFFxzzM8UXsS9yz2MbA5xR86bC5MoZC6VSY439m5feowjGTJRdsFXLnCPSBipb5vYuoE+SxJ1hY/y1f/iAQphfQZuHK9j6Rd2Sfs2VZxS09rB44dHqzfekqPR+Dv8JPkFf2ZOf3tnGMA+CEtnC7CVzgBgkg5JEdg6PBoWZCaYD61VMqWrwjpsjGhaNx53G0A37NJH1RX/Vz+2ADIdZUlLpiDD2rM6c2pa34lVzQBSkZDECsTrGfNpmPwQ26f8en26viHncQhot2k1U= pierrick.molera@gmail.com"
+    # account used for libvirt live-migration
+    livemigration_user: livemigration
+
+    #pacemaker_shutdown_timeout: "2min"
+    extra_crm_cmd_to_run: |
+      # for ntp status monitoting, be sure host_ip is the ip address of the server and not its hostname
+      primitive ntpstatus_test ocf:seapath:ntpstatus params host_ip=10.10.10.10 multiplier=500 op monitor timeout=10 interval=10
+      primitive ptpstatus_test ocf:seapath:ptpstatus op monitor timeout=10 interval=10 op_params multiplier=1000
+      clone cl_ntpstatus_test ntpstatus_test meta target-role=Started
+      clone cl_ptpstatus_test ptpstatus_test meta target-role=Started
+
+    chrony_wait_timeout_sec: 180 #time in seconds the boot sequence will wait for chrony to sync
