@@ -1,0 +1,45 @@
+# Copyright (C) 2020-2023, RTE (http://www.rte-france.com)
+# Copyright (C) 2023, SFL (https://savoirfairelinux.com)
+# SPDX-License-Identifier: Apache-2.0
+
+all:
+  children:
+    VMs:
+      hosts:
+        # guest0:
+        #   description: "Simple VM"
+        #   ansible_host: 192.168.8.50 # Update the VM IP
+        #   vm_template: "../templates/vm/guest.xml.j2"
+        #   vm_disk: "../vm_images/seapath-vm-nort.qcow2"
+        #   vm_features: []
+        #   preferred_host: node1 # Optional
+        #   force: true
+        #   nb_cpu: 2
+        #   bridges:
+        #     - name: "br0" # Change the bridge name
+        #       mac_address: "52:54:00:c4:ff:02" # change the MAC address
+        #   ovs:
+        #     - ovs_port: VM1.0 # Change the OVS port
+        #       mac_address: "52:54:00:c4:ff:05" # change the MAC address
+        guest1:
+          description: "Simple VM with gzipped disk"
+          ansible_host: 192.168.212.132 # Update the VM IP
+          vm_template: "../templates/vm/guest.xml.j2"
+          vm_disk: "../vm_images/seapath-vm-rt.qcow2"
+          cpuset: [2, 3] # CPUs list to use.
+          rt_priority: 1 # FIFO priority
+          vm_features: ["rt", "isolated"]
+          bridges:
+            - name: "br0" # Change the bridge name
+              mac_address: "52:54:00:c4:ff:05" # change the MAC address
+          ovs:
+            - ovs_port: VM2.0 # Change the OVS port
+              mac_address: "52:54:00:c4:ff:06" # change the MAC address
+      vars:
+        ansible_user: virtu
+        ip_addr: "{{ ansible_host }}"
+        network_interface: ens2
+        gateway_addr: 192.168.8.1 # Update the Gateway IP addr
+        grub_append: "console=ttyS0,115200" # Optional variable to add grub argument for boot.
+        # This one for example create a tty that can be accessed with `virsh console`
+        wait_for_connection: true # at the end of guest deployment, wait for an ssh connection before moving forward, default is False
