@@ -109,7 +109,7 @@ all:
           # hypervisors common vars
           vars:
             # Realtime/CPUs cgroups isolation configuration
-            isolcpus: "2,3" # CPUs to isolate (isolcpus, irqbalance on debian 12)
+            isolcpus: "2,3,6,7" # CPUs to isolate (isolcpus, irqbalance on debian 12)
             workqueuemask: "0033" #workqueue mask, here it mean 0 and 1 are the only allowed cpus
             #cpusystem: "0-1" # CPUs reserves for system
             #cpuuser: "0-1" # CPUs reserves for user applications
