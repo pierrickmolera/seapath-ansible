@@ -16,26 +16,28 @@ all:
                             ansible_ssh_private_key_file: "/home/pierrick/.ssh/id_rsa_seapath"
 
                             # snmp network settings
-                            #snmp_admin_ip_addr: 10.10.11.1 #used to listen to snmp requests
+                            # snmp_admin_ip_addr: 10.10.11.1 #used to listen to snmp requests
+
+                            netplan_configurations :
+                              - inventories/netplan_admin_br0_example.yaml.j2
 
                             # Main network configuration
                             network_interface: enp1s0
                             ip_addr: "{{ ansible_host }}"
                             subnet: 24
-                            dns_servers: "8.8.8.8 8.8.4.4"
+                            dns_servers: "8.8.8.8"
                             gateway_addr: 192.168.10.1
                             apply_network_config: false # do we restart the ovs_config script to apply the changes to the ovs topology (default: false)
                             skip_reboot_setup_network: false # if we do no apply the changes (apply_network_config=false), then the network playbook will reboot the servers at the end. You can choose to skip this reboot here (default: false)
                             skip_recreate_team0_config: false # if defined and true, the network playbook won't try to destroy and recreate the team0 (cluster) bridge configuration (default is false)
                             remove_all_networkd_config: true # if defined and true, the network playbook will start by wiping the /etc/systemd/network/ directory content, this can help cleaning old conflicting files. THIS MUST NOT BE USED WITH skip_recreate_team0_config at the same time or the cluster network config won't be recreated
 
+
                             ntp_servers:
                               - "185.254.101.25"
                               - "51.145.123.29"
-                            
 
                             # Main network configuration
- 
                             
                             # PTP network settings
                             #ptp_interface: "enp88s0" #OPTIONAL PTP Interface
@@ -43,12 +45,9 @@ all:
                             #ptp_delptay_mechanism: E2E # OPTIONAL E2E or P2P defaut is P2P
                             #ptp_network_transport: L2 # OPTIONAL L2 or UDPv4 default is L2
 
-
                             #ovs_vsctl_cmds: # Extra ovs-vsctl commands to be run by the network playbook
                             #  - "set Bridge brBRIDGE1 netflow=@nf0 -- --id=@nf0 create NetFlow targets=\\\"192.168.10.1:2055\\\" add_id_to_interface=true"
-
                             # Syslog log sending configuration
-
                             # Other Network configuration
 
                             # Realtime/CPUs cgroups isolation configuration
