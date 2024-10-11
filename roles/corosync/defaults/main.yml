@@ -1,0 +1,8 @@
+---
+# file: roles/corosync/defaults/main.yml
+corosync_force_regenerate_authkey: false
+corosync_node_list:
+  - ctrl01
+  - ctrl02
+  - ctrl03
+corosync_transport: udpu
